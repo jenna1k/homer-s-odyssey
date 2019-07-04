@@ -4,57 +4,31 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 
-export default class SignUp extends Component {
+export default class SignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
       password: '',
-      passwordbis: '',
-      name: '',
-      lastname: '',
       redirect: false,
     };
 
-    this.updateEmailField = this.updateEmailField.bind(this);
+    this.updateField = this.updateField.bind(this);
     this.submitInfo = this.submitInfo.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleClose = this.handleClose.bind(this);
   }
 
-  updateEmailField(e) {
+  updateField(e) {
     this.setState({[e.target.name]: e.target.value});
   }
 
   submitInfo(e) {
     e.preventDefault();
-    console.log(this.state);
-    fetch('/auth/signup', {
-      method: 'POST',
-      headers: new Headers({
-        'Content-Type': 'application/json',
-      }),
-      body: JSON.stringify(this.state),
-    })
-      .then(res => res.json())
-      .then(
-        res => this.setState({flash: res.flash}),
-        err => this.setState({flash: err.flash}),
-      );
-    this.handleClick();
-  }
-
-  handleClick() {
-    this.setState({open: true, redirect: true});
-  }
-
-  handleClose() {
-    this.setState({open: false});
+    this.setState({redirect: true});
   }
 
   render() {
     if (this.state.redirect) {
-      return <Redirect to='/' />;
+      return <Redirect to='/profile' />;
     } else {
       return (
         <React.Fragment>
@@ -64,15 +38,14 @@ export default class SignUp extends Component {
               justifyContent: 'flex-end',
               padding: '10px',
             }}>
-            <Link to={{pathname: '/signin'}} style={{textDecoration: 'none'}}>
+            <Link to={{pathname: '/signup'}} style={{textDecoration: 'none'}}>
               <Button variant='contained' color='secondary'>
-                Sign In
+                Sign Up
               </Button>
             </Link>
           </div>
           <div>
-            {/* <h1>{JSON.stringify(this.state, 1, 1)}</h1> */}
-            <h2>Sign up</h2>
+            <h2>Sign In</h2>
             <form
               style={{
                 display: 'flex',
@@ -85,31 +58,13 @@ export default class SignUp extends Component {
                 type='email'
                 name='email'
                 label='email'
-                onChange={this.updateEmailField}
+                onChange={this.updateField}
               />
               <TextField
                 type='password'
                 name='password'
                 label='password'
-                onChange={this.updateEmailField}
-              />
-              <TextField
-                type='password'
-                name='passwordbis'
-                label='confirm password'
-                onChange={this.updateEmailField}
-              />
-              <TextField
-                type='text'
-                name='name'
-                label='first name'
-                onChange={this.updateEmailField}
-              />
-              <TextField
-                type='text'
-                name='lastname'
-                label='last name'
-                onChange={this.updateEmailField}
+                onChange={this.updateField}
               />
               <input
                 type='submit'

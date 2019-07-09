@@ -14,6 +14,7 @@ export default class SignUp extends Component {
       name: '',
       lastname: '',
       redirect: false,
+      submitted: false,
     };
 
     this.updateEmailField = this.updateEmailField.bind(this);
@@ -38,22 +39,27 @@ export default class SignUp extends Component {
     })
       .then(res => res.json())
       .then(
-        res => this.setState({flash: res.flash}),
-        err => this.setState({flash: err.flash}),
+        res => this.setState({flash: res.flash, submitted: true}),
+        err => this.setState({flash: err.flash, submitted: true}),
       );
     this.handleClick();
   }
 
   handleClick() {
-    this.setState({open: true, redirect: true});
+    this.setState({open: true});
   }
 
   handleClose() {
-    this.setState({open: false});
+    this.setState({open: false, redirect: true});
   }
 
   render() {
-    if (this.state.redirect) {
+    const action = (
+      <Button color='secondary' size='small' onClick={this.handleClose}>
+        close
+      </Button>
+    );
+    if (this.state.redirect && this.state.submitted && !this.state.open) {
       return <Redirect to='/' />;
     } else {
       return (
@@ -136,6 +142,7 @@ export default class SignUp extends Component {
                 anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
                 open={this.state.open}
                 onClose={this.handleClose}
+                action={action}
                 ContentProps={{
                   'aria-describedby': 'message-id',
                 }}

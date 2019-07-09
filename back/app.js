@@ -6,21 +6,28 @@ const bodyParser = require('body-parser');
 // const morgan = require('morgan');
 const app = express();
 const authRouter = require('./routes/auth/auth');
+const passport = require('./routes/auth/passport-config');
 
-// I set up the application
-// app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
-app.use('/auth', authRouter); //where authRouter is imported
+app.use('/auth', authRouter);
 
-// I implement the API part
 app.get('/', (req, res) => {
   res.send('youhou');
 });
+
+app.get('/profile', passport.authenticate('jwt', {session: false}), function(
+  req,
+  res,
+) {
+  res.status(200).json(req.user);
+});
+
 /// in case of a not found path, I return the 'Not Found' 404 code
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  console.log(err);
+  var err = new Error('Page Not Found!');
   err.status = 404;
   next(err);
 });
